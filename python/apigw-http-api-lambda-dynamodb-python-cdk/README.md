@@ -85,6 +85,34 @@ You should get below response
 {"message": "Successfully inserted data!"}
 ```
 
+## Logging and Monitoring
+
+This application implements comprehensive logging and monitoring following AWS Well-Architected Framework best practices:
+
+### Log Locations
+
+- **Lambda Function Logs**: `/aws/lambda/apigw_handler` (6 months retention)
+- **API Gateway Access Logs**: CloudWatch Log Group with structured JSON format (6 months retention)
+- **API Gateway Execution Logs**: CloudWatch Logs with INFO level logging
+- **VPC Flow Logs**: CloudWatch Log Group capturing all network traffic (3 months retention)
+
+### Log Retention Policies
+
+- Lambda and API Gateway logs: 6 months
+- VPC Flow Logs: 3 months
+- For compliance requirements, consider exporting logs to S3 for long-term retention (up to 7 years)
+
+### Querying Logs
+
+Use CloudWatch Logs Insights to query logs:
+
+```
+fields @timestamp, @message
+| filter @message like /error/
+| sort @timestamp desc
+| limit 20
+```
+
 ## Cleanup 
 Run below script to delete AWS resources created by this sample stack.
 ```
